@@ -198,15 +198,15 @@ router.post("/logout", async (req, res) => {
             { new: true }
         )
 
-        res.clearCookie('token', {
+        res.clearCookie('token',{
             httpOnly: true,
             sameSite: "lax",
             secure: "production",
         })
-        return res.status(200).json({ message: '로그아웃 성공' })
+        return res.status(200).json({message:'로그아웃 성공'})
     } catch (error) {
 
-        return res.status(500).json({ message: '로그아웃 실패', error: error.message })
+        return res.status(500).json({message:'로그아웃 실패',error:error.message})
     }
 })
 

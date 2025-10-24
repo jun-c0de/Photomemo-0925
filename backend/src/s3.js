@@ -5,6 +5,7 @@ const {
 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
 
+
 const required = [
     "AWS_REGION",
     "AWS_ACCESS_KEY_ID",
@@ -15,7 +16,7 @@ const required = [
 const missing = required.filter(k => !process.env[k])
 
 if (missing.length) {
-    console.error('[S3 ENV Missing', missing)
+    console.error('[S3 ENV Missing]', missing)
 }
 
 const s3 = new S3Client({
@@ -27,7 +28,6 @@ const s3 = new S3Client({
 })
 
 const Bucket = process.env.S3_BUCKET
-
 
 
 async function presignPut(Key, ContentType, sec = 300) {
@@ -46,4 +46,5 @@ async function presignGet(Key, sec = 300) {
     return getSignedUrl(s3, cmd, { expiresIn: sec })
 
 }
+
 module.exports = { s3, presignPut, presignGet, Bucket }

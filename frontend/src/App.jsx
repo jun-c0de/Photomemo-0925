@@ -1,16 +1,17 @@
+
 import './App.scss'
 import { useState, useEffect } from 'react'
-import { Routes, Route, Navigate, Router } from 'react-router-dom'
+import { Routes, Route, Navigate,useLocation } from 'react-router-dom'
 import AuthPanel from './components/AuthPanel'
+import Landing from './pages/Landing'
 import Header from './components/Header'
 import ProtectRoute from './components/ProtectRoute'
-import AdminDashboard from './pages/admin/adminDashboard'
 import UserDashboard from './pages/user/userDashboard'
-import Landing from './pages/Landing'
+import AdminDashboard from './pages/admin/adminDashboard'
 import {
   fetchMe as apiFetchMe,
   logout as apiLogout,
-  saveAuthToStrorage,
+  saveAuthToStorage,
   clearAuthStorage
 } from "./api/client"
 function App() {
@@ -20,26 +21,28 @@ function App() {
     return raw ? JSON.parse(raw) : null
   })
 
-
+const location = useLocation()
 
   const [token, setToken] = useState(() => localStorage.getItem('token'))
   const [me, setMe] = useState(null)
   const isAuthed = !!token
 
-  const hideOn = new Set(['/', '/admin/login'])
+
+  const hideOn = new Set(['/','/admin/login'])
   const showHeader = isAuthed && !hideOn.has(location.pathname)
 
 
   const handleAuthed = async ({ user, token }) => {
-
     try {
+
       setUser(user)
       setToken(token ?? null)
-      saveAuthToStrorage({ user, token })
+      saveAuthToStorage({ user, token })
       handleFetchMe()
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
+
   }
 
   const handleLogout = async () => {
@@ -53,6 +56,7 @@ function App() {
       setMe(null)
       clearAuthStorage()
     }
+
   }
 
   const handleFetchMe = async () => {
@@ -70,19 +74,17 @@ function App() {
     if (isAuthed) handleFetchMe()
   }, [isAuthed])
 
-
   return (
     <div className='page'>
       {showHeader && <Header
-        isAuthed={isAuthed}
-        user={user}
-        onLogout={handleLogout}
+      isAuthed={isAuthed}
+      user={user}
+      onLogout={handleLogout}
       />}
-
 
       <Routes>
         <Route path='/' element={<Landing />} />
-        {/*로그인 회원가입 */}
+        {/* 로그인 회원가입 */}
         <Route
           path='/admin/login'
           element={<AuthPanel
@@ -106,6 +108,7 @@ function App() {
             />
           }
         >
+          
           <Route index element={<Navigate to="/user/dashboard" replace />} />
           <Route path='dashboard' element={<UserDashboard />} />
         </Route>
@@ -120,8 +123,8 @@ function App() {
             />
           }
         >
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path='dashboard' element={<AdminDashboard />} />
+          <Route index element={<Navigate to="/admin/dashboard" replace/>}/>
+          <Route path='dashboard' element={<AdminDashboard/>}/>
         </Route>
         <Route path='*' element={<Navigate to="/" replace />} />
       </Routes>

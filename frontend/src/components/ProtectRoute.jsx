@@ -15,7 +15,7 @@ const ProtectRoute = ({
     if(requiredRole && user?.role !==requiredRole){
         return <Navigate to='/' replace/>
     }
-    return <Outlet />
+    return <Outlet/>
 }
 
 export default ProtectRoute

@@ -1,6 +1,7 @@
 import React from 'react'
+
 import { useNavigate, NavLink, Link } from 'react-router-dom'
-import './style/Header.scss'
+import "./style/Header.scss"
 const Header = ({
     isAuthed,
     user,
@@ -32,7 +33,7 @@ const Header = ({
                             </span>
                             <button className='btn logout' onClick={handleLogout}>로그아웃</button>
                         </div>
-                    )}
+                    ) }
                 </div>
             </div>
         </header>
