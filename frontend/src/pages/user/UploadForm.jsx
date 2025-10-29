@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import "./style/UploadForm.scss"
-const UploadForm = () => ({
+const UploadForm = ({
   onUploaded,
   initail,
   onClose
@@ -16,28 +16,34 @@ const UploadForm = () => ({
   const [uploading, setUploading] = useState(false)
   const panelRef = useRef(null)
 
-  const handlelFileChange = (e) => {
+
+  const handleFileChange = (e) => {
 
     const file = e.target.files?.[0]
 
     if (!file) return
+
     if (form.preview) URL.revokeObjectURL(form.preview)
     const previewUrl = URL.createObjectURL(file)
 
-    setForm((prev) => ({ ...prev, preview: previewUrl }))
+    setForm((prev) => ({ ...prev, file, preview: previewUrl }))
+
+
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (!form.title.trim()) {
       console.warn('title empty')
-      alert('제목을 입력하세요.')
+      alert('제목을 입력하세요')
 
       return
     }
-    if (!uploading) return
+    if (uploading) return
+
     try {
       setUploading(true)
+
       await onUploaded?.({
         title: form.title.trim(),
         content: form.content.trim(),
@@ -47,18 +53,20 @@ const UploadForm = () => ({
       if (form.preview) URL.revokeObjectURL(form.preview)
 
       setForm({
-        title:"",
-        content:"",
-        file:null,
-        preview:null
+        title: "",
+        content: "",
+        file: null,
+        preview: null
       })
 
       onClose?.()
     } catch (error) {
-      console.error('submit error',error)
-    }finally{
+
+      console.error('submit error', error)
+    } finally {
       setUploading(false)
     }
+
   }
   return (
     <section className='am-backdrop'>
@@ -76,6 +84,7 @@ const UploadForm = () => ({
             <input
               id='title'
               type="text"
+              name='title'
               value={form.title}
               onChange={(e) => {
                 setForm((prev) => ({ ...prev, title: e.target.value }))
@@ -86,6 +95,7 @@ const UploadForm = () => ({
             <label htmlFor="content">내용</label>
             <textarea
               id='content'
+              name='content'
               value={form.content}
               onChange={(e) => {
                 setForm((prev) => ({ ...prev, content: e.target.value }))
@@ -100,12 +110,12 @@ const UploadForm = () => ({
                 accept='image/*'
                 type="file"
                 name='file'
-                onChange={handlelFileChange}
+                onChange={handleFileChange}
               />
               {form.preview && (
-                <div className="preview-wrap">
-                  <img src={form.preview} alt='미리보기' className='preview-thumb' />
-                  <p className='file-name'>{form.file?.name}</p>
+                <div className='preview-wrap'>
+                  <img src={form.preview} alt="미리보기" className='preview-thumb' />
+                  <p className="file-name">{form.file?.name}</p>
                 </div>
               )}
             </div>
@@ -116,7 +126,9 @@ const UploadForm = () => ({
           <button
             type='submit'
             disabled={uploading}
-            className="btn primary">업로드</button>
+            className="btn primary">
+            {uploading ? "업로드 중..." : "업로드"}
+          </button>
         </div>
       </form>
     </section>
