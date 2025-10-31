@@ -1,21 +1,37 @@
-import React from 'react'
-import UserPostItem from './UserPostItem'
-const UserPostList = ({ items = [], loading, onReload, search }) => {
+import React, { useEffect, useMemo } from "react";
+import UserPostItem from "./UserPostItem";
+import { usePosts } from "../../hooks/usePosts";
+import "./style/UserPostList.scss";
+const UserPostList = ({ search = "" }) => {
+  const { items, loading, load } = usePosts();
 
-    if (!items.length) return <p>게시물이 없습니다/</p>
+  useEffect(() => {
+    load();
+  }, [load]);
 
-    return (
-        (
-            <div className='post-list'>
-                {items.map((i)=>(
-                    <UserPostItem
-                    key={i._id}
-                    item={i}
-                    />
-                ))}
-            </div>
-        )
+  const filtered = useMemo(()=>{
+
+    const q = search.trim().toLowerCase()
+    if(!q) return items
+
+    return items.filter(
+      (i)=>
+        i.title?.toLowerCase().includes(q) ||
+        i.content?.toLowerCase().includes(q) 
     )
-}
 
-export default UserPostList
+  },[items,search])
+
+  // if (loading) return <p>로딩중...</p>;
+  if (!items.length) return <p>게시물이 없습니다.</p>;
+
+  return (
+    <div className="post-list">
+      {filtered.map((i) => (
+        <UserPostItem key={i._id} item={i} />
+      ))}
+    </div>
+  );
+};
+
+export default UserPostList;
