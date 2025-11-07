@@ -1,6 +1,6 @@
-const mongoose=require('mongoose')
+const mongoose= require('mongoose')
 
-const AuditLogScheam = new mongoose.Schema({
+const AuditLogSchema= new mongoose.Schema({
     actor:{
         type:mongoose.Types.ObjectId,
         ref:'User'
@@ -15,9 +15,7 @@ const AuditLogScheam = new mongoose.Schema({
         type:String,
         enum:['create','update','delete','approve','reject','hide']
     },
-    targetId:{
-        type:String
-    },
+    targetId:{type:String},
     diff:Object,
     ip:String,
     ua:String
@@ -25,8 +23,10 @@ const AuditLogScheam = new mongoose.Schema({
     timestamps:true
 })
 
-AuditLogScheam.index({createdAt:-1})
 
-AuditLogScheam.index({resource:1,action:1,createdAt:-1})
+AuditLogSchema.index({createdAt:-1})
 
-module.exports=mongoose.model('AuditLog',AuditLogScheam)
+AuditLogSchema.index({resource:1,action:1,createdAt:-1})
+
+
+module.exports=mongoose.model('AuditLog',AuditLogSchema)

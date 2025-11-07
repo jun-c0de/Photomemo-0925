@@ -51,9 +51,9 @@ userSchema.methods.comparePassword=function(plain){
     return bcrypt.compare(plain,this.passwordHash)
 }
 
-userSchema.method.setPassword = async function(plain){
-    const salt = await bcrypt.genSalt(10)
-    this.passwordHash = await bcrypt.hash(plain,salt)
+userSchema.method.setPassword= async function(plain){
+    const salt=await bcrypt.genSalt(10)
+    this.passwordHash= await bcrypt.hash(plain,salt)
 }
 
 
@@ -62,8 +62,7 @@ userSchema.methods.toSafeJSON=function(){
     delete obj.passwordHash
     return obj
 }
-
-userSchema.set('toJson',{
+userSchema.set('toJSON',{
     versionKey:false,
     transform:(_doc,ret)=>{
         delete ret.passwordHash
