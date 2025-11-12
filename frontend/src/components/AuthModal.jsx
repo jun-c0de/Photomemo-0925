@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import "./style/AuthModal.scss"
-import api from '../api/client'
+import api, { BASE_URL } from '../api/client'
 const AuthModal = ({
   open,
   onClose,
@@ -24,6 +24,9 @@ const AuthModal = ({
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState('')
 
+  const handleKakaoLogin=()=>{
+    window.location.href=`${BASE_URL}/api/auth/kakao`
+  }
 
   useEffect(() => {
 

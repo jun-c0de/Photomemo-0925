@@ -226,13 +226,20 @@ router.get('/kakao/callback',(req,res,next)=>{
         session:false
     },async(Array,user,info)=>{
         if(err){
-            console.error('kakao error,err')
-            return res.redirect(`${FRONT_ORIGIN}/admin/login?error=kakao`)
+            console.error('kakao error',err)
+            return res.status(500).json({message:"카카오 인증 에러"})
         }
         if(!user){
-
+            console.warn('카카오 로그인 실패',info)
+            return res.redirect(`${FRONT_ORIGIN}/admin/login?error=kakao`)
+            
         }
-    })
+        const token = makeToken(user)
+        const redirectUrl = `${FRONT_ORIGIN}/oauth/kakao?token=${token}`
+
+        console.log('kakao redirect',redirectUrl)
+        return res.redirect(redirectUrl)
+    })(req, res, next)
 }
 )
 
