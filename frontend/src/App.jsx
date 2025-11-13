@@ -34,6 +34,7 @@ function App() {
   const showHeader = isAuthed && !hideOn.has(location.pathname);
 
   const handleAuthed = async ({ user, token }) => {
+    console.log("카카오 로그인 완료:", user, token);
     try {
       setUser(user);
       setToken(token ?? null);
@@ -83,7 +84,7 @@ function App() {
           <Route 
           path="/oauth/kakao" 
           element={<KakaoCallback onAuthed={handleAuthed}/>} />
-          
+
           {/* 로그인 회원가입 */}
           <Route
             path="/admin/login"
